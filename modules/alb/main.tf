@@ -1,9 +1,7 @@
-# modules/alb/main.tf
 resource "aws_elb" "this" {
   name               = "demo-elb"
-  subnets            = [var.subnet_id]   # single subnet for 1AZ
+  subnets            = [var.subnet_id]
   security_groups    = [var.security_group_id]
-  idle_timeout       = 60
   cross_zone_load_balancing = true
 
   listener {
@@ -21,9 +19,7 @@ resource "aws_elb" "this" {
     unhealthy_threshold = 2
   }
 
-  tags = {
-    Name = "demo-elb"
-  }
+  instances = var.instance_ids
 }
 
 output "elb_dns_name" {
