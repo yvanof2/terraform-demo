@@ -13,6 +13,3 @@ resource "aws_instance" "this" {
 }
 
 # Output EC2 instance ID
-output "instance_id" {
-  value = aws_instance.this.id
-}
