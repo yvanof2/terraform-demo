@@ -1,5 +1,5 @@
 resource "aws_db_instance" "this" {
-  db_name              = var.db_name          # Use db_name instead of name
+  db_name              = var.db_name
   username             = var.username
   password             = var.password
   instance_class       = var.instance_type
@@ -11,4 +11,3 @@ resource "aws_db_instance" "this" {
   vpc_security_group_ids = [var.security_group_id]
   db_subnet_group_name   = var.subnet_id
 }
-
