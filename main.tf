@@ -64,13 +64,14 @@ module "ec2" {
 # ----------------------
 module "rds" {
   source            = "./modules/rds"
-  subnet_id         = module.network.private_subnet_id
-  db_name           = var.db_name
-  username          = var.db_username
-  password          = var.db_password
-  instance_type     = var.db_instance_type
-  security_group_id = module.network.rds_sg_id
+  db_name           = "mydb"
+  username          = "admin"
+  password          = "changeme123"
+  instance_type     = "db.t3.micro"
+  subnet_ids        = [aws_subnet.demo1.id, aws_subnet.demo2.id] # <-- needs at least 2 subnets in different AZs
+  security_group_id = aws_security_group.rds_sg.id
 }
+
 
 # ----------------------
 # ALB Module
