@@ -75,5 +75,6 @@ module "alb" {
   source           = "./modules/alb"
   subnet_id        = module.network.public_subnet_id
   security_group_id = module.ec2.ec2_sg_id
-  instance_ids     = [module.ec2.instance_id]   # pass the EC2 instance here
+  instance_ids     = [module.ec2.instance_id]
 }
+
