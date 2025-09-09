@@ -1,3 +1,12 @@
+resource "aws_db_subnet_group" "this" {
+  name       = "${var.db_name}-subnet-group"
+  subnet_ids = var.subnet_ids   # <-- this should be a list of subnet IDs
+  tags = {
+    Name = "${var.db_name}-subnet-group"
+  }
+}
+
+
 resource "aws_db_instance" "this" {
   db_name              = var.db_name
   username             = var.username
