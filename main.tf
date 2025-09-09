@@ -83,4 +83,35 @@ module "alb" {
   security_group_id = module.ec2.ec2_sg_id
   instance_ids      = [module.ec2.instance_id]   # single-element list
 }
+resource "aws_subnet" "rds_az1" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "us-east-1a"   # adjust to your region
+}
+
+resource "aws_subnet" "rds_az2" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = "us-east-1b"   # adjust to your region
+}
+resource "aws_security_group" "rds_sg" {
+  name        = "rds_sg"
+  description = "Allow MySQL traffic from EC2"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.this.cidr_block] # allow VPC internal traffic
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 
