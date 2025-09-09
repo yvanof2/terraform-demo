@@ -18,5 +18,6 @@ resource "aws_db_instance" "this" {
   publicly_accessible  = false
 
   vpc_security_group_ids = [var.security_group_id]
-  db_subnet_group_name   = var.subnet_id
+  db_subnet_group_name   = aws_db_subnet_group.this.name  # <-- FIXED
 }
+
