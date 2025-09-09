@@ -1,18 +1,19 @@
-variable "subnet_id" {
-  description = "Subnet ID for the ALB"
+variable "vpc_id" {
   type        = string
+  description = "The VPC ID where the ALB will be created"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "The subnet ID for the ALB"
 }
 
 variable "security_group_id" {
-  description = "Security group ID for the ALB"
   type        = string
+  description = "Security group ID to attach to the ALB"
 }
 
 variable "instance_ids" {
-  description = "List of EC2 instance IDs to register with ALB"
   type        = list(string)
-}
-variable "vpc_id" {
-  description = "VPC ID where the ALB target group will be created"
-  type        = string
+  description = "List of EC2 instance IDs to attach to the target group"
 }
