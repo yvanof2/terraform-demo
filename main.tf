@@ -73,9 +73,8 @@ module "rds" {
 # ----------------------
 module "alb" {
   source            = "./modules/alb"
-  vpc_id            = module.network.vpc_id          # ✅ Add this
+  vpc_id            = module.network.vpc_id
   subnet_id         = module.network.public_subnet_id
   security_group_id = module.ec2.ec2_sg_id
-  # instance_ids or target_id if your module uses it
+  instance_id       = module.ec2.instance_id   # single EC2
 }
-
