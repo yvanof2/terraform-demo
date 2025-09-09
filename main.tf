@@ -68,8 +68,8 @@ module "rds" {
   username          = "admin"
   password          = "changeme123"
   instance_type     = "db.t3.micro"
-  subnet_ids        = [aws_subnet.demo1.id, aws_subnet.demo2.id] # <-- needs at least 2 subnets in different AZs
   security_group_id = aws_security_group.rds_sg.id
+  subnet_ids        = [aws_subnet.rds_az1.id, aws_subnet.rds_az2.id]
 }
 
 
