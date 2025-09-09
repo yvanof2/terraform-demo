@@ -44,16 +44,18 @@ resource "aws_security_group" "ec2" {
 # EC2 Module
 # ----------------------
 module "ec2" {
-  source            = "./modules/ec2"
-  ami               = var.ec2_ami
-  instance_type     = var.ec2_instance_type
-  subnet_id         = module.network.public_subnet_id
-  security_group_id = aws_security_group.ec2.id
+  source        = "./modules/ec2"
+  ami           = var.ec2_ami
+  instance_type = var.ec2_instance_type
+  subnet_id     = module.network.public_subnet_id
+  vpc_id        = module.network.vpc_id   # <- Add this
+
   user_data = <<-EOF
               #!/bin/bash
               echo "Welcome to Bido's demo" > /var/www/html/index.html
               EOF
 }
+
 
 # ----------------------
 # RDS Module
