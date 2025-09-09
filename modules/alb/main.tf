@@ -1,31 +1,31 @@
-resource "aws_lb" "this" {
-  name               = "demo-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = []
-  subnets            = [var.subnet_id]
-}
+# modules/alb/main.tf
+resource "aws_elb" "this" {
+  name               = "demo-elb"
+  subnets            = [var.subnet_id]   # single subnet for 1AZ
+  security_groups    = [var.security_group_id]
+  idle_timeout       = 60
+  cross_zone_load_balancing = true
 
-resource "aws_lb_target_group" "this" {
-  name     = "demo-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
-}
+  listener {
+    instance_port     = 80
+    instance_protocol = "HTTP"
+    lb_port           = 80
+    lb_protocol       = "HTTP"
+  }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.this.arn
-  port              = 80
-  protocol          = "HTTP"
+  health_check {
+    target              = "HTTP:80/"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+  tags = {
+    Name = "demo-elb"
   }
 }
 
-resource "aws_lb_target_group_attachment" "ec2" {
-  target_group_arn = aws_lb_target_group.this.arn
-  target_id        = var.target_id
-  port             = 80
+output "elb_dns_name" {
+  value = aws_elb.this.dns_name
 }
