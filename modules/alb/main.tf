@@ -25,7 +25,3 @@ resource "aws_lb_target_group_attachment" "this" {
 
 # ----------------------
 # Outputs
-# ----------------------
-output "alb_dns_name" {
-  value = aws_lb.this.dns_name
-}
