@@ -1,16 +1,14 @@
-resource "aws_db_subnet_group" "this" {
-  name       = "demo-db-subnet"
-  subnet_ids = [var.subnet_id]
-}
-
 resource "aws_db_instance" "this" {
-  allocated_storage    = 20
-  engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = var.instance_type
-  name                 = var.db_name
+  db_name              = var.db_name          # Use db_name instead of name
   username             = var.username
   password             = var.password
-  db_subnet_group_name = aws_db_subnet_group.this.name
+  instance_class       = var.instance_type
+  allocated_storage    = 20
+  engine               = "mysql"
   skip_final_snapshot  = true
+  publicly_accessible  = false
+
+  vpc_security_group_ids = [var.security_group_id]
+  db_subnet_group_name   = var.subnet_id
 }
+
