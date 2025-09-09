@@ -72,8 +72,8 @@ module "rds" {
 # ALB Module
 # ----------------------
 module "alb" {
-  source    = "./modules/alb"
-  vpc_id    = module.network.vpc_id
-  subnet_id = module.network.public_subnet_id
-  target_id = module.ec2.instance_id
+  source           = "./modules/alb"
+  subnet_id        = module.network.public_subnet_id
+  security_group_id = module.ec2.ec2_sg_id
+  instance_ids     = [module.ec2.instance_id]   # pass the EC2 instance here
 }
