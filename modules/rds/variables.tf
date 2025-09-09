@@ -1,20 +1,31 @@
 variable "subnet_id" {
-  type = string
+  description = "Subnet ID where the RDS instance will be deployed"
+  type        = string
 }
 
 variable "db_name" {
-  type = string
+  description = "Database name"
+  type        = string
 }
 
 variable "username" {
-  type = string
+  description = "Database username"
+  type        = string
 }
 
 variable "password" {
-  type = string
-  sensitive = true
+  description = "Database password"
+  type        = string
+  sensitive   = true
 }
 
 variable "instance_type" {
-  type = string
+  description = "RDS instance type"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "security_group_id" {
+  description = "Security group ID for RDS instance"
+  type        = string
 }
