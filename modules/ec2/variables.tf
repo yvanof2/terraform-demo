@@ -23,3 +23,8 @@ variable "user_data" {
   type        = string
   default     = ""
 }
+variable "vpc_id" {
+  description = "VPC ID for EC2 and security group"
+  type        = string
+}
+
