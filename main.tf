@@ -44,10 +44,10 @@ resource "aws_security_group" "ec2" {
 # EC2 Module
 # ----------------------
 module "ec2" {
-  source           = "./modules/ec2"
-  ami              = var.ec2_ami
-  instance_type    = var.ec2_instance_type
-  subnet_id        = module.network.public_subnet_id
+  source            = "./modules/ec2"
+  ami               = var.ec2_ami
+  instance_type     = var.ec2_instance_type
+  subnet_id         = module.network.public_subnet_id
   security_group_id = aws_security_group.ec2.id
   user_data = <<-EOF
               #!/bin/bash
@@ -76,19 +76,4 @@ module "alb" {
   vpc_id    = module.network.vpc_id
   subnet_id = module.network.public_subnet_id
   target_id = module.ec2.instance_id
-}
-
-# ----------------------
-# Outputs
-# ----------------------
-output "alb_url" {
-  value = module.alb.alb_dns_name
-}
-
-output "ec2_instance_id" {
-  value = module.ec2.instance_id
-}
-
-output "rds_endpoint" {
-  value = module.rds.db_endpoint
 }
