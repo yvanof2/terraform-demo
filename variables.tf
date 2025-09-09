@@ -1,4 +1,6 @@
-# AWS provider configuration
+# ----------------------
+# AWS region and AZ
+# ----------------------
 variable "aws_region" {
   description = "AWS region to deploy resources"
   type        = string
@@ -6,40 +8,55 @@ variable "aws_region" {
 }
 
 variable "az" {
-  description = "Availability zone to deploy resources"
+  description = "Availability Zone"
   type        = string
   default     = "us-east-1a"
 }
 
+# ----------------------
 # EC2 variables
-variable "ec2_instance_type" {
-  description = "Type of EC2 instance"
-  type        = string
-  default     = "t3.micro"
-}
-
+# ----------------------
 variable "ec2_ami" {
-  description = "AMI ID for EC2"
+  description = "AMI ID for EC2 instance"
   type        = string
 }
 
-# RDS variables
-variable "db_name" {
-  description = "RDS database name"
+variable "ec2_instance_type" {
+  description = "EC2 instance type"
   type        = string
-  default     = "demodb"
+  default     = "t2.micro"
+}
+
+variable "ec2_user_data" {
+  description = "User data script for EC2 instance"
+  type        = string
+  default = <<EOF
+#!/bin/bash
+echo "Welcome to Bido's demo" > /var/www/html/index.html
+EOF
+}
+
+# ----------------------
+# RDS variables
+# ----------------------
+variable "db_name" {
+  description = "Database name"
+  type        = string
 }
 
 variable "db_username" {
-  description = "RDS master username"
+  description = "Database username"
   type        = string
-  default     = "admin"
 }
 
 variable "db_password" {
-  description = "RDS master password"
+  description = "Database password"
   type        = string
   sensitive   = true
 }
 
-variable "db_inst_
+variable "db_instance_type" {
+  description = "RDS instance type"
+  type        = string
+  default     = "db.t3.micro"
+}
