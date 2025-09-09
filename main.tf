@@ -12,24 +12,25 @@ module "network" {
 }
 
 # ----------------------
-# EC2 Security Group
-# ----------------------
-resource "aws_security_group" "ec2" {
-  name   = "ec2_sg"
-  vpc_id = module.network.vpc_id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# EC2 Security Group
+resource "aws_security_group" "ec2_sg" {
+  name        = "ec2_sg"
+  description = "Security group for EC2"
+  vpc_id      = module.network.vpc_id
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["YOUR_IP/32"]  # Optional: restrict SSH
   }
 
   egress {
@@ -44,11 +45,12 @@ resource "aws_security_group" "ec2" {
 # EC2 Module
 # ----------------------
 module "ec2" {
-  source        = "./modules/ec2"
-  ami           = var.ec2_ami
-  instance_type = var.ec2_instance_type
-  subnet_id     = module.network.public_subnet_id
-  vpc_id        = module.network.vpc_id   # <- Add this
+  source            = "./modules/ec2"
+  ami               = var.ec2_ami
+  instance_type     = var.ec2_instance_type
+  subnet_id         = module.network.public_subnet_id
+  vpc_id            = module.network.vpc_id
+  security_group_id = aws_security_group.ec2_sg.id  # <- Add this
 
   user_data = <<-EOF
               #!/bin/bash
