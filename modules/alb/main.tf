@@ -6,9 +6,12 @@ resource "aws_lb" "this" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
-  subnets            = [var.subnet_id]   # only 1 subnet since 1AZ
+  subnets            = var.subnet_ids   # now supports multiple subnets
 }
 
+# ----------------------
+# Target Group
+# ----------------------
 resource "aws_lb_target_group" "this" {
   name     = "demo-tg"
   port     = 80
@@ -16,12 +19,26 @@ resource "aws_lb_target_group" "this" {
   vpc_id   = var.vpc_id
 }
 
-# Single instance attachment
+# ----------------------
+# Attach EC2 Instances
+# ----------------------
 resource "aws_lb_target_group_attachment" "this" {
+  count            = length(var.instance_ids)
   target_group_arn = aws_lb_target_group.this.arn
-  target_id        = var.instance_ids[0]   # first EC2 instance
+  target_id        = var.instance_ids[count.index]
   port             = 80
 }
 
 # ----------------------
-# Outputs
+# Listener
+# ----------------------
+resource "aws_lb_listener" "this" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.this.arn
+  }
+}
