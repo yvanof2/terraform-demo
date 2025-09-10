@@ -68,17 +68,17 @@ resource "aws_security_group" "rds_sg" {
 # ----------------------
 # ALB Security Group
 # ----------------------
-resource "aws_security_group" "alb_sg" {
-  name        = "alb_sg"
-  description = "Allow HTTP/HTTPS traffic to ALB"
-  vpc_id      = module.network.vpc_id
+# ----------------------
+# ALB
+# ----------------------
+module "alb" {
+  source            = "./modules/alb"
+  subnet_ids        = module.network.public_subnet_ids   # ✅ multiple subnets
+  vpc_id            = module.network.vpc_id
+  security_group_id = module.alb_sg.id
+  instance_ids      = module.ec2.instance_ids
+}
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port   = 443
