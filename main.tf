@@ -8,11 +8,11 @@ provider "aws" {
 module "network" {
   source   = "./modules/network"
   vpc_cidr = "10.0.0.0/16"
-  az       = var.az
+  az1      = var.az1
+  az2      = var.az2
 }
 
 # ----------------------
-
 # EC2 Security Group
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
@@ -48,16 +48,15 @@ module "ec2" {
   source            = "./modules/ec2"
   ami               = var.ec2_ami
   instance_type     = var.ec2_instance_type
-  subnet_id         = module.network.public_subnet_id
+  subnet_id         = module.network.public_subnet_ids[0]
   vpc_id            = module.network.vpc_id
-  security_group_id = aws_security_group.ec2_sg.id  # <- Add this
+  security_group_id = aws_security_group.ec2_sg.id
 
   user_data = <<-EOF
               #!/bin/bash
               echo "Welcome to Bido's demo" > /var/www/html/index.html
               EOF
 }
-
 
 # ----------------------
 # RDS Module
@@ -69,9 +68,8 @@ module "rds" {
   password          = "changeme123"
   instance_type     = "db.t3.micro"
   security_group_id = aws_security_group.rds_sg.id
-  subnet_ids        = [aws_subnet.rds_az1.id, aws_subnet.rds_az2.id]
+  subnet_ids        = module.network.private_subnet_ids
 }
-
 
 # ----------------------
 # ALB Module
@@ -79,20 +77,9 @@ module "rds" {
 module "alb" {
   source            = "./modules/alb"
   vpc_id            = module.network.vpc_id
-  subnet_id         = module.network.public_subnet_id
+  subnet_ids        = module.network.public_subnet_ids
   security_group_id = module.ec2.ec2_sg_id
   instance_ids      = [module.ec2.instance_id]   # single-element list
-}
-resource "aws_subnet" "rds_az1" {
-  vpc_id            = module.network.vpc_id
-  cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1a"   # adjust to your region
-}
-
-resource "aws_subnet" "rds_az2" {
-  vpc_id            = module.network.vpc_id
-  cidr_block        = "10.0.4.0/24"
-  availability_zone = "us-east-1b"   # adjust to your region
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -104,13 +91,5 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = [module.network.vpc_cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+    cid
+
