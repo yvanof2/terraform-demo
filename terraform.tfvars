@@ -1,8 +1,7 @@
 # ----------------------
 # AWS region and AZ
 # ----------------------
-aws_region = "us-east-1"
-az         = "us-east-1a"
+azs = ["us-east-1a", "us-east-1b"]
 
 # ----------------------
 # EC2
