@@ -31,7 +31,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["73.128.24.153/32"]  # Restrict SSH
+    cidr_blocks = ["73.128.24.153/32"]  # restrict SSH
   }
 
   egress {
@@ -54,7 +54,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_sg.id]  # Only EC2 SG can connect
+    security_groups = [aws_security_group.ec2_sg.id]
   }
 
   egress {
@@ -68,17 +68,17 @@ resource "aws_security_group" "rds_sg" {
 # ----------------------
 # ALB Security Group
 # ----------------------
-# ----------------------
-# ALB
-# ----------------------
-module "alb" {
-  source            = "./modules/alb"
-  subnet_ids        = module.network.public_subnet_ids   # ✅ multiple subnets
-  vpc_id            = module.network.vpc_id
-  security_group_id = module.alb_sg.id
-  instance_ids      = module.ec2.instance_ids
-}
+resource "aws_security_group" "alb_sg" {
+  name        = "alb_sg"
+  description = "Allow HTTP/HTTPS traffic to ALB"
+  vpc_id      = module.network.vpc_id
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   ingress {
     from_port   = 443
@@ -133,5 +133,5 @@ module "alb" {
   vpc_id            = module.network.vpc_id
   subnet_ids        = module.network.public_subnet_ids
   security_group_id = aws_security_group.alb_sg.id
-  instance_ids      = [module.ec2.instance_id]
+  instance_ids      = module.ec2.instance_ids
 }
