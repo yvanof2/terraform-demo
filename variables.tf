@@ -1,5 +1,5 @@
 # ----------------------
-# AWS region and AZ
+# AWS region and AZs
 # ----------------------
 variable "aws_region" {
   description = "AWS region to deploy resources"
@@ -7,10 +7,10 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "az" {
-  description = "Availability Zone"
-  type        = string
-  default     = "us-east-1a"
+variable "azs" {
+  description = "List of Availability Zones"
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
 }
 
 # ----------------------
