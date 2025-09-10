@@ -4,7 +4,12 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "az" {
-  description = "Availability zone"
+variable "az1" {
+  description = "Availability zone 1"
+  type        = string
+}
+
+variable "az2" {
+  description = "Availability zone 2"
   type        = string
 }
