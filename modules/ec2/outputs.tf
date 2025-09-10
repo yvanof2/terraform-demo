@@ -1,6 +1,6 @@
 output "instance_ids" {
   description = "List of EC2 instance IDs"
-  value       = [aws_instance.this.id]   # wrap in list for consistency
+  value       = [aws_instance.this.id]   # wrap in list
 }
 
 output "ec2_sg_id" {
