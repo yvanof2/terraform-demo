@@ -4,10 +4,22 @@ output "alb_url" {
   value       = module.alb.alb_dns_name
 }
 
-# Output EC2 instance ID
+# Output EC2 instance IDs (list)
+output "ec2_instance_ids" {
+  description = "The ID(s) of the EC2 instance(s)"
+  value       = module.ec2.instance_ids
+}
+
+# Optional: single EC2 instance ID
 output "ec2_instance_id" {
-  description = "The ID of the EC2 instance"
-  value       = module.ec2.instance_id
+  description = "The first EC2 instance ID"
+  value       = module.ec2.instance_ids[0]
+}
+
+# Output EC2 public IP
+output "ec2_public_ip" {
+  description = "The public IP of the EC2 instance(s)"
+  value       = module.ec2.public_ip
 }
 
 # Output RDS endpoint
